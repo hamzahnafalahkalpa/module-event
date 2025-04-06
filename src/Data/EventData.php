@@ -4,6 +4,7 @@ namespace Hanafalah\ModuleEvent\Data;
 
 use Hanafalah\LaravelSupport\Supports\Data;
 use Hanafalah\ModuleEvent\Contracts\Data\EventData as DataEventData;
+use Hanafalah\ModuleEvent\Contracts\Data\WorkerFlattenData;
 use Hanafalah\ModuleEvent\Enums\Event\Status;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\MapName;
@@ -21,26 +22,26 @@ class EventData extends Data implements DataEventData{
 
         #[MapInputName('reference_type')]
         #[MapName('reference_type')]
-        public string $reference_type,
+        public ?string $reference_type = null,
 
         #[MapInputName('reference_id')]
         #[MapName('reference_id')]
-        public mixed $reference_id,
+        public mixed $reference_id = null,
 
-        #[MapInputName('initial_date')]
-        #[MapName('initial_date')]
+        #[MapInputName('inited_at')]
+        #[MapName('inited_at')]
         #[DateFormat('Y-m-d')]
-        public string $initial_date,
+        public string $inited_at,
 
-        #[MapInputName('start_date')]
-        #[MapName('start_date')]
+        #[MapInputName('started_at')]
+        #[MapName('started_at')]
         #[DateFormat('Y-m-d')]
-        public ?string $start_date = null,
+        public ?string $started_at = null,
 
-        #[MapInputName('end_date')]
-        #[MapName('end_date')]
+        #[MapInputName('ended_at')]
+        #[MapName('ended_at')]
         #[DateFormat('Y-m-d')]
-        public ?string $end_date = null,
+        public ?string $ended_at = null,
 
         #[MapInputName('total_day')]
         #[MapName('total_day')]
@@ -50,9 +51,9 @@ class EventData extends Data implements DataEventData{
         #[MapName('status')]
         public ?string $status = Status::DRAFT->value,
 
-        #[MapInputName('workers')]
-        #[MapName('workers')]
-        public ?WorkerFlattenData $workers = null,
+        #[MapInputName('worker')]
+        #[MapName('worker')]
+        public ?WorkerFlattenData $worker = null,
 
         #[MapInputName('props')]
         #[MapName('props')]

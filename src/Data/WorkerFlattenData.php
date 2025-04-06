@@ -18,24 +18,24 @@ class WorkerFlattenData extends Data implements DataWorkerFlattenData{
         #[MapName('site_manager')]
         public WorkerData $site_manager,
 
-        #[MapInputName('event_coordinator')]
-        #[MapName('event_coordinator')]
-        public WorkerData $event_coordinator,
+        // #[MapInputName('event_coordinator')]
+        // #[MapName('event_coordinator')]
+        // public WorkerData $event_coordinator,
 
-        #[MapInputName('production_teams')]
-        #[MapName('production_teams')]
-        #[DataCollectionOf(WorkerData::class)]
-        public ?array $production_teams = [],
+        // #[MapInputName('production_teams')]
+        // #[MapName('production_teams')]
+        // #[DataCollectionOf(WorkerData::class)]
+        // public ?array $production_teams = [],
 
-        #[MapInputName('creative_teams')]
-        #[MapName('creative_teams')]
-        #[DataCollectionOf(WorkerData::class)]
-        public ?array $creative_teams,
+        // #[MapInputName('creative_teams')]
+        // #[MapName('creative_teams')]
+        // #[DataCollectionOf(WorkerData::class)]
+        // public ?array $creative_teams,
 
-        #[MapInputName('logistic_officers')]
-        #[MapName('logistic_officers')]
-        #[DataCollectionOf(WorkerData::class)]
-        public WorkerData $logistic_officers,
+        // #[MapInputName('logistic_officers')]
+        // #[MapName('logistic_officers')]
+        // #[DataCollectionOf(WorkerData::class)]
+        // public WorkerData $logistic_officers,
     ){
         
     }

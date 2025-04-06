@@ -47,7 +47,7 @@ class Event extends PackageManagement implements ContractsEvent
             $id = $attributes['id'] ?? null;
             if (!isset($id)) throw new \Exception('id not found');
 
-            $model = $this->eventModel()->with($this->showUsingRelation())->firstOrFail($id);
+            $model = $this->eventCommon()->with($this->showUsingRelation())->firstOrFail($id);
         } else {
             $model->load($this->showUsingRelation());
         }
@@ -69,16 +69,14 @@ class Event extends PackageManagement implements ContractsEvent
                 'reference_id'   => $event_dto->reference_id
             ];
         }
-        $event = $this->eventModel()->updateOrCreate($guard,[
-            'initial_date' => $event_dto->initial_date ?? null,
-            'start_date'   => $event_dto->start_date ?? null,
-            'end_date'     => $event_dto->end_date ?? null,
+        $event = $this->eventCommon()->updateOrCreate($guard,[
+            'inited_at'    => $event_dto->inited_at ?? null,
+            'started_at'   => $event_dto->started_at ?? null,
+            'ended_at'     => $event_dto->ended_at ?? null,
             'status'       => $event_dto->status ?? Status::DRAFT->value
         ]);
-
         foreach ($event_dto->props as $key => $prop) $event->{$key} = $prop;
         $event->save();
-
         if (isset($event_dto->workers)){
             
         }
@@ -92,7 +90,7 @@ class Event extends PackageManagement implements ContractsEvent
     }
 
     public function prepareViewEventPaginate(PaginateData $paginate_dto): LengthAwarePaginator{
-        return $this->eventModel()->with($this->viewUsingRelation())->paginate(...$paginate_dto->toArray())->appends(request()->all());
+        return $this->eventCommon()->with($this->viewUsingRelation())->paginate(...$paginate_dto->toArray())->appends(request()->all());
     }
 
     public function viewEventPaginate(? PaginateData $paginate_dto = null): array{
@@ -102,7 +100,7 @@ class Event extends PackageManagement implements ContractsEvent
     }
 
     public function prepareViewEventList(): Collection{
-        return $this->eventModel()->with($this->viewUsingRelation())->get();
+        return $this->eventCommon()->with($this->viewUsingRelation())->get();
     }
 
     public function viewEventList(): array{
@@ -116,7 +114,7 @@ class Event extends PackageManagement implements ContractsEvent
         if (!isset($attributes['id'])){
             throw new \Exception('id not found');
         }
-        $event = $this->eventModel()->findOrFail($attributes['id']);
+        $event = $this->eventCommon()->findOrFail($attributes['id']);
         return $event->delete();
     }
 
@@ -126,7 +124,7 @@ class Event extends PackageManagement implements ContractsEvent
         });
     }
 
-    public function eventModel(mixed $conditionals = null): Builder{
+    public function eventCommon(mixed $conditionals = null): Builder{
         $this->booting();
         return $this->EventModel()->conditionals($this->mergeCondition($this->mergeCondition($conditionals ?? [])))->withParameters('or')->orderBy('created_at','desc');
     }

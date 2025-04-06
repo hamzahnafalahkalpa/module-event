@@ -23,7 +23,7 @@ class WorkerData extends Data implements DataWorkerData{
 
         #[MapInputName('reference_type')]
         #[MapName('reference_type')]
-        public string $reference_type,
+        public ?string $reference_type = null,
 
         #[MapInputName('reference_id')]
         #[MapName('reference_id')]
@@ -44,5 +44,11 @@ class WorkerData extends Data implements DataWorkerData{
         if (isset($this->reference_id)){
             $this->reference_type ??= 'Employee';
         }        
+        $reference = $this->{$this->reference_type.'Model'}()::find($this->reference_id);
+        $this->props['prop_reference'] = [
+            'type' => $this->reference_type,
+            'id'   => $this->reference_id,
+            'name' => $reference->name
+        ];
     }
 }

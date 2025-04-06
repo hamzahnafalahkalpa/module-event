@@ -18,7 +18,7 @@ class Event extends BaseModel{
     protected $keyType    = 'string';
     protected $list = [
         'id', 'name', 'reference_type', 'reference_id', 'progress',
-        'initial_date', 'start_date', 'end_date', 'status','props'
+        'inited_at', 'started_at', 'ended_at', 'status','props'
     ];
 
     public function getViewResource(){
