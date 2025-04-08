@@ -60,7 +60,7 @@ class Event extends PackageManagement implements ContractsEvent
         });
     }
 
-    public function prepareStoreEvent(EventData $event_dto): Model{
+    public function prepareStore(mixed $event_dto): Model{
         if (isset($event_dto->id)){
             $guard = ['id' => $event_dto->id];
         }else{
@@ -81,6 +81,10 @@ class Event extends PackageManagement implements ContractsEvent
             
         }
         return static::$event_model = $event;
+    }
+
+    public function prepareStoreEvent(EventData $event_dto): Model{
+        return $this->prepareStore($event_dto);
     }
 
     public function storeEvent(? EventData $event_dto = null): array{
