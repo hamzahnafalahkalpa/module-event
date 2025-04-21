@@ -35,6 +35,7 @@ return new class extends Migration
                 $table->date('inited_at')->nullable();
                 $table->date('started_at')->nullable();
                 $table->date('ended_at')->nullable();
+                $table->unsignedMediumInteger('total_day')->nullable();
                 $table->string('status')->default(Status::DRAFT->value)->nullable(false);
                 $table->json('props')->nullable();
                 $table->timestamps();

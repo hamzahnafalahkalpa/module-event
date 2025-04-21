@@ -16,6 +16,7 @@ class ViewEvent extends ApiResource
             'inited_at'       => $this->inited_at,
             'started_at'      => $this->started_at,
             'ended_at'        => $this->ended_at,
+            'total_day'       => $this->total_day,
             'status'          => $this->status
         ];
         return $arr;

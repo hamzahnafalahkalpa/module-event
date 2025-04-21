@@ -27,14 +27,6 @@ class Event extends PackageManagement implements ContractsEvent
         ]
     ];
 
-    protected function viewUsingRelation(): array{
-        return [];
-    }
-
-    protected function showUsingRelation(): array{
-        return [];
-    }
-
     public function getEvent(): mixed{
         return static::$event_model;
     }
@@ -73,6 +65,7 @@ class Event extends PackageManagement implements ContractsEvent
             'inited_at'    => $event_dto->inited_at ?? null,
             'started_at'   => $event_dto->started_at ?? null,
             'ended_at'     => $event_dto->ended_at ?? null,
+            'total_day'    => $event_dto->total_day ?? null,
             'status'       => $event_dto->status ?? Status::DRAFT->value
         ]);
         foreach ($event_dto->props as $key => $prop) $event->{$key} = $prop;
