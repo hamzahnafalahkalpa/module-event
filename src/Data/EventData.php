@@ -2,6 +2,7 @@
 
 namespace Hanafalah\ModuleEvent\Data;
 
+use Hanafalah\LaravelSupport\Concerns\Support\HasRequestData;
 use Hanafalah\LaravelSupport\Supports\Data;
 use Hanafalah\ModuleEvent\Contracts\Data\EventData as DataEventData;
 use Hanafalah\ModuleEvent\Contracts\Data\WorkerFlattenData;
@@ -9,9 +10,11 @@ use Hanafalah\ModuleEvent\Enums\Event\Status;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Attributes\Validation\DateFormat;
-use Illuminate\Support\Str;
+use Spatie\LaravelData\Attributes\DataCollectionOf;
 
 class EventData extends Data implements DataEventData{
+    use HasRequestData;
+
     #[MapInputName('id')]
     #[MapName('id')]
     public mixed $id = null;
@@ -31,7 +34,7 @@ class EventData extends Data implements DataEventData{
     #[MapInputName('inited_at')]
     #[MapName('inited_at')]
     #[DateFormat('Y-m-d')]
-    public string $inited_at;
+    public ?string $inited_at = null;
 
     #[MapInputName('started_at')]
     #[MapName('started_at')]
@@ -53,36 +56,37 @@ class EventData extends Data implements DataEventData{
 
     #[MapInputName('worker')]
     #[MapName('worker')]
-    public ?WorkerFlattenData $worker = null;
+    public object|array|null $worker = null;
+
+    #[MapInputName('workers')]
+    #[MapName('workers')]
+    #[DataCollectionOf(WorkerData::class)]
+    public ?array $workers = null;
 
     #[MapInputName('props')]
     #[MapName('props')]
     public ?array $props = [];
 
     public static function after(EventData $data): EventData{
-        $workers = [
-            'project_manager',
-            'site_manager',
-            'event_coordinator',
-            'production_teams',
-            'creative_teams',
-            'logistic_officers'
-        ];
-        $prop_worker = &$data->props['prop_worker'];
-        foreach ($workers as $worker) {
-            $data_worker = $data->worker->{$worker};
-            if (is_array($data_worker)) {
-                foreach ($data_worker as $each_worker) {
-                    $prop_worker[$worker][] = [
-                        'reference_id' => $each_worker->reference_id,
-                        'reference'    => $each_worker->props['prop_reference']
-                    ];                
+        if (isset($data->worker)){
+            $new = static::new();
+            
+            $prop_worker = &$data->props['prop_worker'];
+            foreach($data->worker as $key => &$worker){
+                $worker = $new->requestDTO(WorkerData::class,$worker);
+                if (is_array($worker)) {
+                    foreach ($worker as $each_worker) {
+                        $prop_worker[$key][] = [
+                            'reference_id' => $each_worker->reference_id,
+                            'reference'    => $each_worker->props['prop_reference']
+                        ];                
+                    }
+                }else{
+                    $prop_worker[$key] = [
+                        'reference_id' => $worker->reference_id,
+                        'reference'    => $worker->props['prop_reference']
+                    ];
                 }
-            }else{
-                $prop_worker[$worker] = [
-                    'reference_id' => $data_worker->reference_id,
-                    'reference'    => $data_worker->props['prop_reference']
-                ];
             }
         }
         return $data;

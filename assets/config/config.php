@@ -28,5 +28,6 @@ return [
         'models' => [
             // ADD YOUR MODELS HERE
         ]
-    ]
+    ],
+    'occupation' => null
 ];

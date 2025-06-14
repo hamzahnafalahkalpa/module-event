@@ -42,14 +42,29 @@ class WorkerData extends Data implements DataWorkerData{
     
     public static function after(WorkerData $data): WorkerData{
         if (isset($data->reference_id)){
-            $data->reference_type ??= 'Employee';
-            $reference = self::new()->{$data->reference_type.'Model'}()::find($data->reference_id);
+            $model = app(config('database.models.'.config('module-event.reference')));
+            $data->reference_type ??= $model->getMorphClass();
+            $reference = $model->findOrFail($data->reference_id);
+            $data->name ??= $reference->name;
+
         }        
         $data->props['prop_reference'] = [
-            'type' => $data->reference_type,
-            'id'   => $data->reference_id,
+            'id'   => $data->reference_id ?? null,
+            'type' => $data->reference_type ?? null,
             'name' => $reference->name ?? null
         ];
+
+        $data->props['prop_occupation'] = [
+            'id'   => $data->occupation_id ?? null,
+            'name' => null
+        ];
+
+        if (isset($data->occupation_id)){
+            $model = app(config('database.models.'.config('module-event.occupation')));
+            $data->occupation_type ??= $model->getMorphClass();
+            $occupation = $model->findOrFail($data->occupation_id);
+            $data->props['prop_occupation']['name'] = $occupation->name;
+        }
         return $data;
     }
 }

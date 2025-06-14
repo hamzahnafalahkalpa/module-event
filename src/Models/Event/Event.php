@@ -27,7 +27,7 @@ class Event extends BaseModel{
     }
 
     public function showUsingRelation(): array{
-        return [];
+        return ['workers'];
     }
 
     public function getViewResource(){
@@ -39,4 +39,5 @@ class Event extends BaseModel{
     }
 
     public function reference(){return $this->morphTo();}
+    public function workers(){return $this->hasManyModel('Worker');}
 }

@@ -11,8 +11,8 @@ use Illuminate\Database\Eloquent\{
 use Hanafalah\LaravelSupport\Supports\PackageManagement;
 use Hanafalah\ModuleEvent\Contracts\Schemas\Event as ContractsEvent;
 use Hanafalah\ModuleEvent\Contracts\Data\EventData;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Hanafalah\ModuleEvent\Enums\Event\Status;
+use Illuminate\Support\Str;
 
 class Event extends PackageManagement implements ContractsEvent
 {
@@ -27,29 +27,8 @@ class Event extends PackageManagement implements ContractsEvent
         ]
     ];
 
-    public function getEvent(): mixed{
-        return static::$event_model;
-    }
-
-    public function prepareShowEvent(?Model $model = null, ?array $attributes = null): Model{
-        $attributes ??= request()->all();
-
-        $model ??= $this->getEvent();
-        if (!isset($model)) {
-            $id = $attributes['id'] ?? null;
-            if (!isset($id)) throw new \Exception('id not found');
-
-            $model = $this->eventCommon()->with($this->showUsingRelation())->firstOrFail($id);
-        } else {
-            $model->load($this->showUsingRelation());
-        }
-        return static::$event_model = $model;
-    }    
-
-    public function showEvent(?Model $model = null): array{
-        return $this->showEntityResource(function() use ($model){
-            return $this->prepareShowEvent($model);
-        });
+    public function camelEntity(): string{
+        return Str::camel($this->__entity).'Common';
     }
 
     public function prepareStore(mixed $event_dto): Model{
@@ -68,10 +47,13 @@ class Event extends PackageManagement implements ContractsEvent
             'total_day'    => $event_dto->total_day ?? null,
             'status'       => $event_dto->status ?? Status::DRAFT->value
         ]);
-        foreach ($event_dto->props as $key => $prop) $event->{$key} = $prop;
+        $this->fillingProps($event,$event_dto->props);
         $event->save();
         if (isset($event_dto->workers)){
-            
+            foreach ($event_dto->workers as &$worker){
+                $worker->event_id = $event->getKey();
+                $this->schemaContract('worker')->prepareStoreWorker($worker);
+            }
         }
         return static::$event_model = $event;
     }
@@ -80,50 +62,10 @@ class Event extends PackageManagement implements ContractsEvent
         return $this->prepareStore($event_dto);
     }
 
-    public function storeEvent(? EventData $event_dto = null): array{
-        return $this->transaction(function () use ($event_dto) {
-            return $this->showEvent($this->prepareStoreEvent($event_dto ?? $this->requestDTO(EventData::class)));
-        });
-    }
-
-    public function prepareViewEventPaginate(PaginateData $paginate_dto): LengthAwarePaginator{
-        return $this->eventCommon()->with($this->viewUsingRelation())->paginate(...$paginate_dto->toArray())->appends(request()->all());
-    }
-
-    public function viewEventPaginate(? PaginateData $paginate_dto = null): array{
-        return $this->viewEntityResource(function() use ($paginate_dto){            
-            return $this->prepareViewEventPaginate($paginate_dto ?? $this->requestDTO(PaginateData::class));
-        });
-    }
-
-    public function prepareViewEventList(): Collection{
-        return $this->eventCommon()->with($this->viewUsingRelation())->get();
-    }
-
-    public function viewEventList(): array{
-        return $this->viewEntityResource(function(){
-            return $this->prepareViewEventList();
-        });
-    }
-
-    public function prepareDeleteEvent(? array $attributes = null): bool{
-        $attributes ??= request()->all();
-        if (!isset($attributes['id'])){
-            throw new \Exception('id not found');
-        }
-        $event = $this->eventCommon()->findOrFail($attributes['id']);
-        return $event->delete();
-    }
-
-    public function deleteEvent(): bool{
-        return $this->transaction(function(){
-            return $this->prepareDeleteEvent();
-        });
-    }
-
     public function eventCommon(mixed $conditionals = null): Builder{
         $this->booting();
-        return $this->EventModel()->conditionals($this->mergeCondition($this->mergeCondition($conditionals ?? [])))->withParameters('or')->orderBy('created_at','desc');
+        return $this->EventModel()->conditionals($this->mergeCondition($this->mergeCondition($conditionals ?? [])))
+                    ->withParameters('or')->orderBy('created_at','desc');
     }
 }
 

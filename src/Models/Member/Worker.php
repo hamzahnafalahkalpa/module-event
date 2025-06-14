@@ -4,13 +4,11 @@ namespace Hanafalah\ModuleEvent\Models\Member;
 
 use Hanafalah\LaravelHasProps\Concerns\HasProps;
 use Hanafalah\LaravelSupport\Models\BaseModel;
-use Hanafalah\ModuleEvent\Concerns\HasWorker;
-use Hanafalah\ModuleEvent\Resources\Event\{ViewEvent, ShowEvent};
-use Hanafalah\ModuleRegional\Concerns\HasAddress;
+use Hanafalah\ModuleEvent\Resources\Worker\{ViewWorker, ShowWorker};
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
 class Worker extends BaseModel{
-    use HasProps, HasUlids, HasAddress, HasWorker;
+    use HasUlids, HasProps;
 
     public $incrementing  = false;
     protected $primaryKey = 'id';
@@ -23,11 +21,11 @@ class Worker extends BaseModel{
     ];
 
     public function getViewResource(){
-        return ViewEvent::class;
+        return ViewWorker::class;
     }
 
     public function getShowResource(){
-        return ShowEvent::class;
+        return ShowWorker::class;
     }
 
     public function event(){return $this->belongsToModel('Event');}
