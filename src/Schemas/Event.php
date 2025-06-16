@@ -63,9 +63,7 @@ class Event extends PackageManagement implements ContractsEvent
     }
 
     public function eventCommon(mixed $conditionals = null): Builder{
-        $this->booting();
-        return $this->EventModel()->conditionals($this->mergeCondition($this->mergeCondition($conditionals ?? [])))
-                    ->withParameters('or')->orderBy('created_at','desc');
+        return $this->generalSchemaModel()->withParameters('or');
     }
 }
 
