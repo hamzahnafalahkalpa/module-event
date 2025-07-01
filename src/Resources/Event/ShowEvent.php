@@ -10,7 +10,7 @@ class ShowEvent extends ViewEvent
             'worker'  => $this->prop_worker,
             'workers' => $this->relationValidation('workers',function(){
                 return $this->workers->transform(function($worker){
-                    return $worker->toViewApi();
+                    return $worker->toViewApi()->resolve();
                 });
             })
         ];

@@ -9,11 +9,11 @@ class ShowWorker extends ViewWorker
         $arr = [
             'worker'     => $this->prop_worker,
             'reference'  => $this->relationValidation('reference',function(){
-                return $this->reference->toViewApi();
+                return $this->reference->toViewApi()->resolve();
             }),
             'workers' => $this->relationValidation('workers',function(){
                 return $this->workers->transform(function($worker){
-                    return $worker->toViewApi();
+                    return $worker->toViewApi()->resolve();
                 });
             })
         ];
