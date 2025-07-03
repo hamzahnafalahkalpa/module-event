@@ -12,6 +12,7 @@ class ViewEvent extends ApiResource
             'id'              => $this->id,
             'name'            => $this->name,
             'reference_type'  => $this->reference_type, 
+            'reference'       => $this->prop_reference,
             'progress'        => $this->progress,
             'inited_at'       => $this->inited_at,
             'started_at'      => $this->started_at,

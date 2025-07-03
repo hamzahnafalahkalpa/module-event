@@ -18,7 +18,7 @@ class Event extends BaseModel{
     protected $primaryKey = 'id';
     protected $keyType    = 'string';
     protected $list = [
-        'id', 'name', 'reference_type', 'reference_id', 'progress',
+        'id', 'parent_id', 'name', 'reference_type', 'reference_id', 'progress',
         'inited_at', 'started_at', 'ended_at', 'total_day', 'status','props'
     ];
 

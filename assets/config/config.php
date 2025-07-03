@@ -7,6 +7,7 @@ use Hanafalah\ModuleEvent\{
 };
 
 return [
+    'namespace' => 'Hanafalah\ModuleEvent',
     'app' => [
         'contracts' => [
             // ADD YOUR CONTRACTS HERE

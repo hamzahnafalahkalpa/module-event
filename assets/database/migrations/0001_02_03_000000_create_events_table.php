@@ -41,6 +41,15 @@ return new class extends Migration
                 $table->timestamps();
                 $table->softDeletes();
             });
+
+            Schema::table($table_name,function(Blueprint $table) use ($table_name) {
+               $table->foreignIdFor($this->__table, 'parent_id')
+                    ->nullable()
+                    ->index()
+                    ->constrained()
+                    ->cascadeOnUpdate()
+                    ->restrictOnDelete();
+            });
         }
     }
 
