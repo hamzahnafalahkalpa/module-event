@@ -24,7 +24,7 @@ class ProgramData extends Data implements DataProgramData
 
     #[MapInputName('program_category_id')]
     #[MapName('program_category_id')]
-    public mixed $program_category_id;
+    public mixed $program_category_id = null;
 
     #[MapInputName('flag')]
     #[MapName('flag')]
@@ -55,8 +55,11 @@ class ProgramData extends Data implements DataProgramData
     public static function after(self $data): self{
         $new = self::new();
         $props = &$data->props;
-        $program_category = $new->ProgramCategoryModel()->findOrFail($data->program_category_id);
-        $props['prop_program_category'] = $program_category->toViewApi()->only(['id','flag','label','name']);
+
+        if ($data->flag == 'Program'){
+            $program_category = $new->ProgramCategoryModel()->findOrFail($data->program_category_id);
+            $props['prop_program_category'] = $program_category->toViewApi()->only(['id','flag','label','name']);
+        }
         return $data;
     }
 }
