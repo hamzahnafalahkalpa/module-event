@@ -4,6 +4,7 @@ namespace Hanafalah\ModuleEvent\Data;
 
 use Hanafalah\LaravelSupport\Supports\Data;
 use Hanafalah\ModuleEvent\Contracts\Data\ProgramData as DataProgramData;
+use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\MapName;
 
@@ -31,7 +32,7 @@ class ProgramData extends Data implements DataProgramData
 
     #[MapInputName('nominal')]
     #[MapName('nominal')]
-    public ?string $nominal = null;
+    public int $nominal = 0;
 
     #[MapInputName('event')]
     #[MapName('event')]
@@ -39,7 +40,8 @@ class ProgramData extends Data implements DataProgramData
 
     #[MapInputName('activity_lists')]
     #[MapName('activity_lists')]
-    public ?ActivityListData $activity_lists = null;
+    #[DataCollectionOf(ActivityListData::class)]
+    public ?array $activity_lists = null;
 
     #[MapInputName('props')]
     #[MapName('props')]
@@ -47,15 +49,14 @@ class ProgramData extends Data implements DataProgramData
 
     public static function before(array &$attributes){
         $attributes['flag'] ??= 'Program';
+        $attributes['event']['name'] ??= $attributes['name'];
     }
 
     public static function after(self $data): self{
         $new = self::new();
         $props = &$data->props;
-
         $program_category = $new->ProgramCategoryModel()->findOrFail($data->program_category_id);
-        $props['prop_program_category'] = $program_category->toViewApi()->resolve();
-
+        $props['prop_program_category'] = $program_category->toViewApi()->only(['id','flag','label','name']);
         return $data;
     }
 }

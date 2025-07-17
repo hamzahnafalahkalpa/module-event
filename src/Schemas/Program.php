@@ -42,7 +42,7 @@ class Program extends BaseModuleEvent implements ContractsProgram
         if (isset($program_dto->activity_lists) && count($program_dto->activity_lists) > 0) {
             $nominal = 0;
             foreach ($program_dto->activity_lists as $activity_list) {
-                $activity_list->program_id = $program->getKey();
+                $activity_list->parent_id = $program->getKey();
                 $activity_list = $this->schemaContract('activity_list')->prepareStoreActivityList($activity_list);
                 $nominal += $activity_list->nominal;
             }

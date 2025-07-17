@@ -18,6 +18,11 @@ class ShowProgram extends ViewProgram
       'event'      => $this->relationValidation('event',function(){
         return $this->event->toViewApi()->resolve();
       }),
+      'activity_lists' => $this->relationValidation('activityLists',function(){
+        return $this->activityLists->transform(function($activityList){
+          return $activityList->toViewApi()->resolve();
+        });
+      }),
       'activities' => $this->relationValidation('activities',function(){
         return $this->activities->transform(function($activity){
           return $activity->toViewApi()->resolve();

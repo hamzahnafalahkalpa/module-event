@@ -42,11 +42,13 @@ class WorkerData extends Data implements DataWorkerData{
     
     public static function after(WorkerData $data): WorkerData{
         if (isset($data->reference_id)){
-            $model = app(config('database.models.'.config('module-event.reference')));
-            $data->reference_type ??= $model->getMorphClass();
-            $reference = $model->findOrFail($data->reference_id);
-            $data->name ??= $reference->name;
-
+            $data->reference_type ??= config('database.models.'.config('module-event.reference'));
+            if (isset($data->reference_type)){
+                $model = app(config('database.models.'.config('module-event.reference')));
+                $data->reference_type ??= $model->getMorphClass();
+                $reference = $model->findOrFail($data->reference_id);
+                $data->name ??= $reference->name;
+            }
         }        
         $data->props['prop_reference'] = [
             'id'   => $data->reference_id ?? null,
@@ -59,7 +61,7 @@ class WorkerData extends Data implements DataWorkerData{
             'name' => null
         ];
 
-        if (isset($data->occupation_id)){
+        if (isset($data->occupation_id) && config('database.models.'.config('module-event.occupation')) !== null){
             $model = app(config('database.models.'.config('module-event.occupation')));
             $data->occupation_type ??= $model->getMorphClass();
             $occupation = $model->findOrFail($data->occupation_id);

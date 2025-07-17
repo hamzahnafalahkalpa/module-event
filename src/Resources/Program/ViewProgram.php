@@ -16,6 +16,7 @@ class ViewProgram extends ApiResource
   {
     $arr = [
       'id'                => $this->id,
+      'parent_id'         => $this->parent_id,
       'name'              => $this->name,
       'flag'              => $this->flag,
       'nominal'           => $this->nominal,

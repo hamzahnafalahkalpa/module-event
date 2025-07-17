@@ -19,15 +19,18 @@ class Program extends BaseModel{
     protected $keyType = 'string';
     protected $primaryKey = 'id';
     protected $list = [
-        'id', 'program_code', 'flag', 'name', 'nominal', 'props'
+        'id', 'parent_id', 'program_code', 'flag', 'name', 'nominal', 'props'
     ];
 
     protected static function booted(): void{
         parent::booted();
+        static::addGlobalScope('flag',function($query){
+            $query->flagIn((new static)->getMorphClass());
+        });
         static::creating(function($query){
             $morph = $query->getMorphClass();
             $query->{Str::snake($morph).'_code'} = static::hasEncoding(Str::upper(Str::snake($morph)));
-            $query->flag ??= $query->getMorphClass();
+            $query->flag ??= $morph;
         });
     }
 
@@ -39,6 +42,7 @@ class Program extends BaseModel{
 
     public function showUsingRelation(): array{
         return [
+            'activityLists',
             'event.workers'
         ];
     }
@@ -50,4 +54,6 @@ class Program extends BaseModel{
     public function getShowResource(){
         return ShowProgram::class;
     }
+
+    public function activityLists(){return $this->hasManyModel('ActivityList','parent_id');}
 }
