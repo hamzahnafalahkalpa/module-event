@@ -37,7 +37,7 @@ class Program extends BaseModuleEvent implements ContractsProgram
         $program_dto->id          = $program->getKey();
         $program_dto->event->id   = $event->getKey();
         $program_dto->event->name = $event->name;
-        $this->schemaContract('event')->prepareStore($program_dto->event);
+        $event = $this->schemaContract('event')->prepareStore($program_dto->event);
 
         if (isset($program_dto->activity_lists) && count($program_dto->activity_lists) > 0) {
             $nominal = 0;
@@ -48,6 +48,8 @@ class Program extends BaseModuleEvent implements ContractsProgram
             }
             $program->nominal = $nominal;
         }
+
+        $program_dto->props['prop_event'] = $event->toViewApi()->resolve();
 
         $this->fillingProps($program,$program_dto->props);
         $program->save();
