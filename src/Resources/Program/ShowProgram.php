@@ -15,14 +15,16 @@ class ShowProgram extends ViewProgram
   public function toArray(\Illuminate\Http\Request $request): array
   {
     $arr = [
+      'event'      => $this->relationValidation('event',function(){
+        return $this->event->toViewApi()->resolve();
+      }),
       'activities' => $this->relationValidation('activities',function(){
         return $this->activities->transform(function($activity){
           return $activity->toViewApi()->resolve();
         });
       })
     ];
-    $show = $this->resolveNow(new ShowEvent($this));
-    $arr  = $this->mergeArray(parent::toArray($request),$show,$arr);
+    $arr  = $this->mergeArray(parent::toArray($request),$arr);
     return $arr;
   }
 }

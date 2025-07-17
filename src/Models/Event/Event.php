@@ -22,6 +22,10 @@ class Event extends BaseModel{
         'inited_at', 'started_at', 'ended_at', 'total_day', 'status','props'
     ];
 
+    protected $casts = [
+        'name' => 'string'
+    ];
+
     public function viewUsingRelation(): array{
         return [];
     }

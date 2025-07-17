@@ -2,9 +2,9 @@
 
 namespace Hanafalah\ModuleEvent\Resources\Program;
 
-use Hanafalah\ModuleEvent\Resources\Event\ViewEvent;
+use Hanafalah\LaravelSupport\Resources\ApiResource;
 
-class ViewProgram extends ViewEvent
+class ViewProgram extends ApiResource
 {
   /**
    * Transform the resource into an array.
@@ -14,8 +14,16 @@ class ViewProgram extends ViewEvent
    */
   public function toArray(\Illuminate\Http\Request $request): array
   {
-    $arr = [];
-    $arr = $this->mergeArray(parent::toArray($request),$arr);
+    $arr = [
+      'id'                => $this->id,
+      'name'              => $this->name,
+      'flag'              => $this->flag,
+      'nominal'           => $this->nominal,
+      'event'             => $this->prop_event,
+      'program_category'  => $this->prop_program_category ?? null,
+      'created_at'        => $this->created_at,
+      'updated_at'        => $this->updated_at
+    ];
     return $arr;
   }
 }

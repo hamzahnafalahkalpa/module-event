@@ -2,24 +2,45 @@
 
 namespace Hanafalah\ModuleEvent\Models;
 
-use Hanafalah\ModuleEvent\Models\Event\Event;
+use Hanafalah\LaravelHasProps\Concerns\HasProps;
+use Hanafalah\LaravelSupport\Models\BaseModel;
+use Hanafalah\ModuleEvent\Concerns\HasEvent;
 use Hanafalah\ModuleEvent\Resources\Program\{
-    ViewProgram,
-    ShowProgram
+    ViewProgram, ShowProgram
 };
+use Hanafalah\ModuleWarehouse\Concerns\Stock\HasWarehouseStock;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Support\Str;
 
-class Program extends Event
-{
-    protected $table = 'events';
+class Program extends BaseModel{
+    use HasUlids, HasEvent, HasProps, HasWarehouseStock;
 
-    protected $casts = [
-        'name' => 'string'
+    public $incrementing = false;
+    protected $keyType = 'string';
+    protected $primaryKey = 'id';
+    protected $list = [
+        'id', 'program_code', 'flag', 'name', 'nominal', 'props'
     ];
 
+    protected static function booted(): void{
+        parent::booted();
+        static::creating(function($query){
+            $morph = $query->getMorphClass();
+            $query->{Str::snake($morph).'_code'} = static::hasEncoding(Str::upper(Str::snake($morph)));
+            $query->flag ??= $query->getMorphClass();
+        });
+    }
+
+    public function viewUsingRelation(): array{
+        return [
+            'event'
+        ];
+    }
+
     public function showUsingRelation(): array{
-        return $this->mergeArray(parent::showUsingRelation(),[
-            'activities'
-        ]);
+        return [
+            'event.workers'
+        ];
     }
 
     public function getViewResource(){

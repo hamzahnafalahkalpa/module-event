@@ -30,4 +30,4 @@ use Illuminate\Database\Eloquent\Model;
  * @method Builder program(mixed $conditionals = null)
  */
 
-interface Program extends Event{}
+interface Program extends DataManagement{}
