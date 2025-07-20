@@ -15,7 +15,7 @@ use Hanafalah\ModuleEvent\Contracts\Data\WorkerData;
 class Worker extends PackageManagement implements ContractsWorker
 {
     protected string $__entity = 'Worker';
-    public static $worker_model;
+    public $worker_model;
 
     protected array $__cache = [
         'index' => [
@@ -45,7 +45,7 @@ class Worker extends PackageManagement implements ContractsWorker
         $worker = $this->usingEntity()->updateOrCreate(...$create);
         $this->fillingProps($worker,$worker_dto->props);
         $worker->save();
-        return static::$worker_model = $worker;
+        return $this->worker_model = $worker;
     }
 }
 

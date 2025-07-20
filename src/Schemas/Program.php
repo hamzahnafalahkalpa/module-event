@@ -10,7 +10,7 @@ use Hanafalah\ModuleEvent\Supports\BaseModuleEvent;
 class Program extends BaseModuleEvent implements ContractsProgram
 {
     protected string $__entity = 'Program';
-    public static $program_model;
+    public $program_model;
     protected mixed $__order_by_created_at = ['created_at','desc']; //asc, desc, false
 
     protected array $__cache = [
@@ -53,7 +53,7 @@ class Program extends BaseModuleEvent implements ContractsProgram
 
         $this->fillingProps($program,$program_dto->props);
         $program->save();
-        return static::$program_model = $program;
+        return $this->program_model = $program;
     }
 }
 

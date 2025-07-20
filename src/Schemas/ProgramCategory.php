@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 class ProgramCategory extends Unicode implements ContractsProgramCategory
 {
     protected string $__entity = 'ProgramCategory';
-    public static $program_category_model;
+    public $program_category_model;
     //protected mixed $__order_by_created_at = false; //asc, desc, false
 
     protected array $__cache = [
@@ -24,7 +24,7 @@ class ProgramCategory extends Unicode implements ContractsProgramCategory
 
     public function prepareStoreProgramCategory(ProgramCategoryData $program_category_dto): Model{
         $program_category = $this->prepareStoreUnicode($program_category_dto);
-        return static::$program_category_model = $program_category;
+        return $this->program_category_model = $program_category;
     }
 
     public function programCategory(mixed $conditionals = null): Builder{

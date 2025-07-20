@@ -17,7 +17,7 @@ use Illuminate\Support\Str;
 class Event extends PackageManagement implements ContractsEvent
 {
     protected string $__entity = 'Event';
-    public static $event_model;
+    public $event_model;
 
     protected array $__cache = [
         'index' => [
@@ -55,7 +55,7 @@ class Event extends PackageManagement implements ContractsEvent
                 $this->schemaContract('worker')->prepareStoreWorker($worker);
             }
         }
-        return static::$event_model = $event;
+        return $this->event_model = $event;
     }
 
     public function prepareStoreEvent(EventData $event_dto): Model{

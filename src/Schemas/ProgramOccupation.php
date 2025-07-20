@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 class ProgramOccupation extends Unicode implements ContractsProgramOccupation
 {
     protected string $__entity = 'ProgramOccupation';
-    public static $program_occupation_model;
+    public $program_occupation_model;
     //protected mixed $__order_by_created_at = false; //asc, desc, false
 
     protected array $__cache = [
@@ -24,7 +24,7 @@ class ProgramOccupation extends Unicode implements ContractsProgramOccupation
 
     public function prepareStoreProgramOccupation(ProgramOccupationData $program_occupation_dto): Model{
         $program_occupation = $this->prepareStoreUnicode($program_occupation_dto);
-        return static::$program_occupation_model = $program_occupation;
+        return $this->program_occupation_model = $program_occupation;
     }
 
     public function programOccupation(mixed $conditionals = null): Builder{
