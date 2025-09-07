@@ -21,7 +21,6 @@
     "require": {
         "hanafalah/laravel-support": "dev-main",
         "hanafalah/module-transaction": "dev-main",
-        "hanafalah/module-profession": "dev-main",
-        "hanafalah/module-rencana-anggaran": "dev-main"
+        "hanafalah/module-profession": "dev-main"
     }
 }
