@@ -56,4 +56,6 @@ class Program extends BaseModel{
     }
 
     public function activityLists(){return $this->hasManyModel('ActivityList','parent_id');}
+    public function surveillance(){return $this->morphOneModel('VisitPatient','reference');}
+    public function surveillances(){return $this->morphManyModel('VisitPatient','reference');}
 }
